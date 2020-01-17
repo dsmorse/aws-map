@@ -1070,11 +1070,12 @@ class ASG(Dot):
     def inVpc(self, vpc):
         if vpc:
             subnets = self.data.vpc_zone_identifier
-            for subnet in subnets.split(','):
-                # sys.stderr.write(subnet)
-                if vpc and subnet in objects and objects[subnet].data.vpc_id == vpc:
-                    return True
-            return False
+            if subnets is not None:
+                for subnet in subnets.split(','):
+                    # sys.stderr.write(subnet)
+                    if vpc and subnet in objects and objects[subnet].data.vpc_id == vpc:
+                        return True
+                return False
         return True
 
 
@@ -1436,7 +1437,7 @@ def main():
         return
     if args.iterate:
         for o in objects.keys():
-            if o.startswith(args.iterate):
+            if o is not None and o.startswith(args.iterate):
                 f = open('%s.dot' % o, 'w')
                 setattr(args, args.iterate, o)
                 generate_map(f, args)
